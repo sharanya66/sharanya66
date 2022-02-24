@@ -1,0 +1,104 @@
+Mindteck:
+
+Technical Interview:
+1.Sort the list of elements without using sort() function(bubblesort)
+2.Program to generate random numbers
+
+Qualcomm:
+
+1.Program to print the words with frequency without using inbuilt functions.
+2.Program to delete the kth node from the begining and end of the linked list(DSA)
+3.given an array having repeated elements ,print the repeated value with out using inbuilt functions.
+4.Pointer
+5.memory management algorithm.
+6.c language.
+
+Cisco:
+1.program using decorators.
+2.Program using yield keyword
+3.Explain automation framework
+4.how do u take the input from the framework
+5.what is git
+6.jenkins
+
+
+Second round:
+1.program to validate the balanced parantesis
+2.Count the elements by using Collections
+3.program to replace the elements with -1
+
+
+Intel:
+1.which test case u will automate first
+
+HPE:
+what is functional testing
+what is sanity testing
+
+
+Micron:
+
+1.what is the size of namespace.
+2.Dynamic memory allocation in C language.
+3.How do u fix a bug
+
+Wipro:
+1.What is NVMe
+2.NVMe architecture
+3.How NVMe is better than other protocols.
+4.Pylint tool  according to coding standard(PEP-8)
+5.pytest unit test
+6.python virtual environment
+7.Linux : INSMOD,RMMOD,LSMOD
+8.Stdout
+9.system calls: for interacting driver
+10.CI/CD
+11.What is your work in ur project.
+12.Subproccess module.
+13.What is virtualization
+14.25 Horses Race - logical question
+
+
+Cisco2:
+First round:
+
+1.what  is Your work
+2.For testing what will you do first before starting testing
+3.What is vcenter
+4.What is vmotion
+5.what is VM
+6.process of installing OS on esxi
+7.Bug life cycle
+8.what is hyperflex
+9.DHCP and network configuration in VM
+10.What is iscsi protcol
+11.why do u want to move into cisco
+12.High availability (HA)
+13.fibre switch
+14.what is VMFS datastore
+
+
+
+Second round:
+
+1.day to day work
+2.What is TRIM Command
+3.How do you install Windows OS.
+4.How to load and unload driver in LINUX.(modprobe)
+5.How to install driver in windows.
+6.can we create raid using 5 drives.
+7.difference between raid 0 and raid 1
+8.how we can implement raid 0
+9.can we create raid with one drive
+10.Is NVMe is hotplugable
+11.how you can use vcenter
+12.difference between signed and unsigned drivers
+13.secure boot 
+14.difference between NVMe and SSD
+15.How do create or raised a bug.
+16.does NVMe uses a controller
+17.how to list services in linux
+18.how u take the logs from linux(dmesg)
+19.
+
+
