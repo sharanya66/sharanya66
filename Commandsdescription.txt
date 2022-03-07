@@ -1,0 +1,1633 @@
+*********************************************************Admin Commands*******************************************************
+
+1.FormatNVM
+
+twidl>help(forrmatNVM)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+NameError: name 'forrmatNVM' is not defined
+twidl>help(formatNVM)
+Help on method formatNVM in module devices.protocol_bases.nvme_base:
+
+formatNVM(self, NSID=1, LBAF=0, MS=0, PI=0, PIL=0, SES=0, ZF=0) method of devices.protocol_bases.nvme_base.NVMEWindowsBase instance
+    Brief:
+        formatNVM(NSID=1, LBAF=0, MS=0, PI=0, PIL=0, SES=0, ZF=0) -  Sends the NVM format command to the device.
+
+    Description:
+
+    Argument(s):
+        NSID - (Defaults to 1) Namespace ID to format.
+        LBAF - (Defaults to 0) Specifies the LBA format to apply to the NVM media. Range of 0-15. See identify namespace for LBA range info.
+        MS -   (Defaults to 0) Boolean. If 1, metadata is transferred as part of extended LBA, else in separate buffer.
+        PI -   (Defaults to 0) 3bit. Protection information. Field specifies which end-to-end data protection. 0 = PI disabled
+        PIL -  (Defaults to 0) Boolean. If protection information is enabled (PI > 0), the information is transfered as:
+                                         PIL == 1 first eight bytes of meta data
+                                         PIL == 0 last  eight bytes of meta data
+        SES -  (Defaults to 0) 3bits. Secure Erase Setting. Field specifies a secure erase to be applied as a part of the format.
+        ZF - (Defaults to 0)   Zone format for the given NSID
+
+    Return Value(s):
+        True on Success, False on Failure
+
+    Example:
+        formatNVM(LBAF=0, MS=0, PI=0, PIL=0, SES=0, ZF=0) -> True
+
+    Related:
+
+    Author(s):
+        Drew Knerr
+
+twidl>
+
+
+*******************************************************************************************************************************************************
+2.set/get
+
+
+twidl>help(setFeatures)
+Help on method setFeatures in module devices.protocol_bases.nvme_base:
+
+setFeatures(self, FID=7, NSID=1, DW11=4194368, DW12=0, DW13=0, DW14=0, DW15=0, NUMD=None, buffer=None, SV=0, UUIDIndex=0) method of devices.protocol_bases.nvme_base.NVMEWindowsBase instance
+    Brief:
+        setFeatures(FID=0x07, NSID=1, DW11=0x00400040, DW12=0x0, DW13=0x0, DW14=0x0, DW15=0x0, NUMD=None, buffer=None, SV=0, UUIDIndex=0) - Issues SetFeatures command
+
+    Description:
+        Builds the SetFeatures cmd with supplied FID and, if used, NSID, and buffer if used
+
+    Argument(s):
+        FID - (Optional; Defaults to 0x07) Feature ID for the sent setFeatures nvme command
+        NSID - (Optional; Defaults to 0x01) Namespace ID, which is required and applicable to certain FID values. See spec.
+        DW11 = (Optional; Defaults to 0x0) The value of the command's DW11 in full byte form.
+                Having the individual bit/byte names for all FIDs is unfeasible.
+        DW12 - (Optional; Defaults to 0x0). Applicable to FID MaxLBA only. The value to set to the command's DW12,
+                  where DW11 = bottom 32-bits and DWORD 12 = top 32-bits of the 64-bit Max LBA value
+        DW13 - (Optional; Defaults to 0x0) - Used in NVMe Spec 1.2 (Host Memory Buffer)
+        DW14 - (Optional; Defaults to 0x0) - Used in NVMe Spec 1.2 (Host Memory Buffer)
+        DW15 - (Optional; Defaults to 0x0) - Used in NVMe Spec 1.2 (Host Memory Buffer)
+        NUMD - (Optional; Defaults to None) - Number of dWords to request from the device. If None, use a lookup table to figure out a value.
+        buffer - (Optional; If None, defaults to TWIDL WriteBuffer) Applicable to FIX=0x03 (LBA Range) only. The input buffer,'
+                   containing the 64 LBA Range Type structs 64B in size. 4096B total.
+        SV - (Optional; Defaults to 0x0) - If True (or 1): The controller shall save this attribute through all power states/resets
+                                           If False (or 0): The controller shall not save this attributes through all power states/resets
+        UUIDIndex - (Optional; Defaults to  0) The UUID Index to use
+
+    Return Value(s):
+        True = Success, False = Error
+
+    Example:
+        None
+
+    Author(s):
+        Drew Knerr, Craig Deitering, Charles Machalow
+
+twidl>
+
+
+
+
+
+
+twidl>help(getFeatures)
+Help on method getFeatures in module devices.protocol_bases.nvme_base:
+
+getFeatures(self, FID=7, NSID=1, DW11=0, NUMD=None, buffer=None, SEL=0, UUIDIndex=0) method of devices.protocol_bases.nvme_base.NVMEWindowsBase instance
+    Brief:
+        getFeatures(FID=0x07, NSID=1, DW11=0, NUMD=None, buffer=None, SEL=0, UUIDIndex=0) - Issues GetFeatures command, Rings doorball, waits for completeion and reaps CE.
+
+    Description:
+        Builds the GetFeatures cmd with supplied FID and, if used, NSID,
+        places cmd into the ASQ, rings doorbell, waits for completion, and parses CE when present.
+        PreReq. >createAdminQueues< AQs created and device enabled.
+        Will clear the used area of the buffer according to NUMD.
+            As in if NUMD is 4. Will 0 out the first 16 bytes of the buffer.
+
+    Argument(s):
+        FID - (Optional; Defaults to 0x07) Feature ID for the sent getFeatures nvme command
+        NSID - (Optional; Defaults to 0x01) Namespace ID, which is required and applicable to certain FID values. See spec.
+        DW11 - (Optional; Devaults to 0x00) For FIDs that require additional input into DW11, such as FID=0x09 to select the int vector.
+        NUMD - (Optional; Defaults to None) Number of dWords. If None is given, use lookup table to get value.
+        buffer - (Optional; Defaults to None) If None, use TWIDL read buffer, else, use this buffer for the operation.
+        SEL - (Optional; Defaults to 0) Specifies which value of the attributes to return in the provided data. See spec for more details.
+        UUIDIndex - (Optional; Defaults to  0) The UUID Index to use
+
+    Return Value(s):
+        True on Success, False on Failure
+
+    Example:
+        getFeatures(0x07, 0x00) - Sends GetFeature command for 'Num of Queues'
+
+    Author(s):
+        Drew Knerr, Charles Machalow
+
+twidl>
+**********************************************************************************************************************************************
+3.Asynchronous Event request
+
+twidl>help(asynchronousEventRequest)
+Help on method asynchronousEventRequest in module devices.protocol_bases.nvme_base:
+
+asynchronousEventRequest(self, callBackRef=None) method of devices.protocol_bases.nvme_base.NVMEWindowsBase instance
+    Brief:
+        asynchronousEventRequest(aerTimeout=60, callBackRef=None) - Issues a NVMe Asynchronous Event Request (AER)
+
+    Description:
+        Issues a NVMe Asynchronous Event Request (AER)
+
+
+    Argument(s):
+        callBackRef - (Optional; Defaults to None) Reference to a callback structure to use, if None this function will setup TWIDLs default callBackRef
+
+    Return Value(s):
+        True on Success, False on Failure
+
+    Example:
+        asynchronousEventRequest(aerTimeout = 60, callBackRef=None)
+
+    Related:
+
+    Author(s):
+        Drew Knerr, Craig Deitering
+
+twidl>
+
+**************************************************************************************************************************************
+4.get Log Page
+
+twidl>help(getLogPage)
+Help on method getLogPage in module devices.protocol_bases.nvme_base:
+
+getLogPage(self, NUMD=None, LID=3, NSID=4294967295L, logPageBuffer=None, LPO=0, LSP=0, RAE=False, LSI=0, UUIDIndex=0) method of devices.protocol_bases.nvme_base.NVMEWindowsBase instance
+    Brief:
+        getLogPage(NUMD=None, LID=0x03, NSID=0xFFFFFFFF, logPageBuffer=None, LPO=0, LSP=0, RAE=False, LSI=0, UUIDIndex=0) - Issues Get Log Page command with supplied NUMD and LID specifiers
+        and, if used, the NSID and optional DW11 and DW12 values to be placed in the command struct.
+
+    Description:-
+
+    Argument(s):
+        NUMD - (Optional; Defaults to None) Expected number of DWords to be returned by the device into the commands PRP buffer.
+            If None, uses lookup table.
+        LID  - (Optional; Defaults to 0x03) Log Page Identifier.
+        NSID - (Optional; Defaults to 0xFFFFFFFF) Namespace ID to be used with applicable LIDs.
+        logPageBuffer - (Optional; If None, defaults to TWIDL read buffer) User supplied buffer to copy the returned PRP buffer into for the user to have within TWIDL.
+        LPO  - (Optional; Defaults to 0) The log page offset for the given call to getLogPage(...) (Allowed in NVMe 1.2.1 and later)
+        LSP  - (Optional; Defaults to 0) Log Specific (Allowed in NVMe 1.3 or later)
+        RAE  - (Optional; Defaults to False) Retain Asynchronous Event (Allowed in NVMe 1.3 or later)
+        LSI - (Optional; Default to 0) Log Specific Identifier. (Allowed in NVMe 1.3 or later)
+        UUIDIndex - (Optional; Defaults to  0) The UUID Index to use (Allowed in NVMe 1.4 or later)
+
+    Return Value(s):
+        True on Success, False on Failure
+
+    Example:
+        getLogPage(NUMD=64, LID=0x01) -> True
+        Sends Get Log Page command for the error info page.
+
+    Related:
+
+    Author(s):
+        Drew Knerr, Craig Deitering, Charles Machalow
+
+
+
+twidl>
+*************************************************************************************************************************************
+5.Identify
+
+
+twidl>help(identify)
+Help on method identify in module commands.identify_cmd:
+
+identify(self, outFile=None, inFile=None) method of commands.identify_cmd.IdentifyCmd instance
+    Brief:
+        identify(outFile=None, inFile=None) - Read and parse the basic drive information using
+        negative LBA.
+
+    Description:
+        Use DeviceIdentity object to read the binary and parse the identify structure. Displays
+        basic ID information, including Mode, serial, vendor, WWID, Firmware, etc. NLBA: -64.
+
+    Argument(s):
+        outFile - (Optional; Defaults to None) String file spec of the file you want to save the
+            parsed output to. Default will print to the screen.
+        inFile - (Optional; Defaults to None) String file spec of the binary file you
+            want to load and parse. Default will load the data from the drive.
+
+    Return Value(s):
+        Print out the basic ID information if successfully. Otherwise return False.
+
+    Example:
+        devObj.identify() -> prints basic ID information
+
+    Related: -
+        nlbaIdentify(), parseIdentify()
+
+    Author(s):
+        Brian Ramming
+
+twidl>
+
+
+***************************************************************************************************************************
+6.Security send and Receive
+
+twidl>help(securitySend)
+Help on method securitySend in module devices.protocol_bases.nvme_base:
+
+securitySend(self, TL=0, SPSP=0, SECP=0, writeBuffer=None, NSSF=0) method of devices.protocol_bases.nvme_base.NVMEWindowsBase instance
+    Brief:
+        securitySend(TL=0, SPSP=0, SECP=0, writeBuffer=None, NSSF=0) -  Requests the security data to be returned from the device.
+
+    Description:
+        Used to transfer security protocol data to the controller (contained in writeBuffer). Data structure
+          transferred contains specific commands to be performed by the controller. See NVMe spec 5.14 and SPC-4 doc.
+
+    Argument(s):
+        TL - (Optional; Defaults to 0) The allocation length of the security protocal as defined in SCSI SPC-4.
+        SPSP - (Optional; Defaults to 0) SP specific. Value is defined in SPC-4.
+        SECP - (Optional; Defaults to 0) Security Protocol. Defined in SPC-4. Control shall fail the command with
+                invalid parameter indicated if a reserved value is used.
+        writeBuffer - (Optional; Defaults to None) Data to send. If None, use TWIDL write buffer.
+        NSSF - (Optional; Defaults to 0) NVMe security specific field
+
+    Return Value(s):
+        True on Success, False on Failure
+
+    Example:
+         securitySend(TL=512, SPSP=0, SECP=0, writeBuffer=myWriteBuffer) -> True
+
+    Related:
+
+    Author(s):
+        Drew Knerr, Craig Deitering
+
+twidl>
+
+
+twidl>help(securityReceive)
+Help on method securityReceive in module devices.protocol_bases.nvme_base:
+
+securityReceive(self, AL=0, SPSP=0, SECP=0, readBuffer=None, NSSF=0) method of devices.protocol_bases.nvme_base.NVMEWindowsBase instance
+    Brief:
+        securityReceive(AL=0, SPSP=0, SECP=0, readBuffer=None, NSSF=0) -  Requests the security data to be returned from the device.
+
+    Description:
+        securityReceive command will return the requested security information.
+
+    Argument(s):
+        AL - (Defaults to 0) The allocation length of the security protocal as defined in SCSI SPC-4.
+        SPSP - (Defaults to 0) SP specific. Value is defined in SPC-4.
+        SECP - (Defaults to 0) Security Protocol. Defined in SPC-4. Control shall fail the command with
+                invalid parameter indicated if a reserved value is used.
+        readBuffer -(Defaults to TWIDL read buffer) Read buffer to hold returned data. If None, use TWIDL read buffer
+        NSSF - (Optional; Defaults to 0) NVMe security specific field
+
+    Return Value(s):
+        True on Success, False on Failure
+
+    Example:
+         securityReceive(AL=512, SPSP=0, SECP=0, readBuffer=myReadBuffer) -> True
+
+    Related:
+
+    Author(s):
+        Drew Knerr, Craig Deitering
+
+twidl>
+
+***************************************************************************************************************************************
+7.sanitize
+
+twidl>help(nvmeSanitize)
+Help on method nvmeSanitize in module devices.protocol_bases.nvme_base:
+
+nvmeSanitize(self, NDAS=True, OIPBP=False, OWPASS=1, AUSE=True, SANACT=1, OVRPAT=0) method of devices.protocol_bases.nvme_base.NVMEWindowsBase instance
+    Brief:
+        nvmeSanitize(NDAS=True, OIPBP=False, OWPASS=1, AUSE=True, SANACT=1, OVRPAT=0) - Requests the drive to perform an NVMe 1.3 Sanitize.
+
+    Description:
+        Remember that sanitize operations are performed in the background. The completion of this command does not indicate a successful operation, just that it has begun.
+
+    Argument(s):
+        NDAS - (Optional; Defaults to True) - No Deallocate after sanitize
+        OIPBP - (Optional; Defaults to False) - Overwrite invert pattern between passes
+        OWPASS - (Optional; Defaults to 1) - Overwrite pass count. A value of 0 indicates 16 passes.
+        AUSE - (Optional; Defaults to True) - Allow unrestricted sanitize exit
+        SANACT - (Optional; Defaults to 1) - Sanitize action. See spec for details. 1:exit failure mode,
+                                                                                    2: start block erase sanitize,
+                                                                                    3: start an overwrite sanitize,
+                                                                                    4: start a crypto erase sanitize
+        OVRPAT - (Optional; Defaults to 0) - Overwrite pattern. Only used if SANACT is 3 (for overwrite).
+
+    Return Value(s):
+        True on success, False on failure. Though remember, this will just tell us if the Sanitize started or not
+
+    Example:
+        nvmeSanitize(NDAS=True, OIPBP=False, OWPASS=0, AUSE=True, SANACT=1, OVRPAT=0) -> True
+
+    Related:
+        -
+
+    Author(s):
+        Charles Machalow
+
+twidl>
+
+***********************************************************************************************************************************
+8.Device self Test
+
+
+twidl>help(deviceSelfTest)
+Help on method deviceSelfTest in module devices.protocol_bases.nvme_base:
+
+deviceSelfTest(self, STC, NSID=None) method of devices.protocol_bases.nvme_base.NVMEWindowsBase instance
+    Brief:
+        deviceSelfTest(STC, NSID=None) - Executes the NVMe 1.3 Device Self-test Command
+
+    Description:
+        This command is used to start a device self-test operation or abort a device self-test operation
+
+    Argument(s):
+        STC - (Required) - Self-test Code. If 0x1: starts a short device self-test.
+                                           If 0x2: starts an extended device self-test.
+                                           If 0xE: starts a vendor specific test.
+                                           If 0xF: aborts a device self-test.
+        NSID - (Optional; Defaults to None) - Namespace Id. If None, uses getNamespaceID()
+                                                            If 0: specifies the test should just be on the controller
+                                                            If 0xFFFFFFFF: The test should include all namespaces
+                                                            If a valid namespace id: Test includes the passed in namespace
+
+    Return Value(s):
+        True on Success, False on Failure.
+            Note that this is of the command sending, not of the test itself.
+
+    Example:
+        deviceSelfTest(STC=1, NSID=1) -> True
+
+    Related:
+        -
+
+    Author(s):
+        Charles Machalow
+
+twidl>
+
+**********************************************************************************************************************************
+SCSI Commands
+*******************************************************************************************************************************
+1.Inquiry
+
+
+twidl>help(inquiry)
+Help on method inquiry in module devices.protocol_bases.scsi_base:
+
+inquiry(self, evpd, code, allocation, ioFile=None) method of devices.protocol_bases.scsi_base.SCSIBase instance
+    Brief:
+        inquiry(evpd, code, allocation, ioFile=None) - Returns inquiry information from the drive.
+
+    Description:
+        See SCSI spec for more information.
+
+    Argument(s):
+        evpd - (Required) the CDB evpd flag
+        code - (Required) the CDB code flag
+        allocation - (Required) the CDB allocation flag
+        ioFile - (Optional; Defaults to None) Optional filename (string) to save the binary data
+            to.
+
+    Return Value(s):
+        True if command successful, else False
+
+    Example:
+        inquiry(0,0,0xff) -> True
+
+    Related: -
+
+    Author(s):
+        Craig Hathaway
+
+twidl>
+
+2.Mode sense
+
+twidl>help(modeSense10)
+Help on method modeSense10 in module devices.protocol_bases.scsi_base:
+
+modeSense10(self, page=1, dataLength=255, pageControlField=0, subPage=0, dbd=False) method of devices.protocol_bases.scsi_base.SCSIBase instance
+    Brief:
+        modeSense10(page=0x1, dataLength=0xFF, pageControlField=0x00, subPage=0x00, dbd=False) - Issues SCSI mode sense 10 command
+
+    Description:
+        Data read is saved in the read buffer.
+
+    Argument(s):
+        page - (Optional; Defaults to 0x1) The page number to read
+        dataLength - (Optional; Defaults to 0xFF) The number of bytes to read(?)
+        pageControlField - (Optional; Defaults to 0x00) This sets the PCF attributes of the CDB
+        subPage - (Optional; Defaults to 0x00) the sub page number to read
+        dbd - (Optional; Defaults to False) Sets the Disable Block Descriptor bit.
+
+    Return Value(s):
+        True if command successful, else False.
+
+    Example:
+        modeSense10() -> True
+
+    Related: -
+
+    Author(s):
+        Brian Ramming
+
+twidl>
+
+
+****************************************************************************************************************************************************
+Directives
+****************************************************************************************************************************************************
+1.twidl>help(directiveSend)
+Help on method directiveSend in module devices.protocol_bases.nvme_base:
+
+directiveSend(self, NSID=None, DSPEC=0, DTYPE=0, DOPER=1, NUMD=None, DW12=0, DW13=0) method of devices.protocol_bases.nvme_base.NVMEWindowsBase instance
+    Brief:
+        directiveSend(NSID=None, DSPEC=0, DTYPE=0, DOPER=1, NUMD=None, DW12=0, DW13=0) - Sends an NVMe Directive Send Command
+
+    Description:
+        This is a raw command to specify the individual parameters for the NVMe Directive Send Command
+
+    Argument(s):
+        NSID - (Optional; Defaults to None) - The namespace id. If None, uses getNamespaceID()
+        DSPEC - (Optional; Defaults to 0) - Directive Specific field
+        DTYPE - (Optional; Defaults to 0) - Directive Type field
+        DOPER - (Optional; Defaults to 1) - Directive operation to perform
+        NUMD - (Optional; Defaults to None) - The Number of DWords for the data transfer for this command. If None, uses a lookup 'table'.
+                                                This is a 0-based value.
+        DW12 - (Optional; Defaults to 0) - Raw DWord 12
+        DW13 - (Optional; Defaults to 0) - Raw DWord 13
+
+    Return Value(s):
+        True on Success, False on failure.
+
+    Example:
+        directiveSend(NSID=1, DSPEC=0, DTYPE=0, DOPER=1, NUMD=None, DW12=0, DW13=0) -> True
+
+    Related:
+        directiveReceive()
+
+    Author(s):
+        Charles Machalow
+
+twidl>
+
+
+
+
+twidl>help(directiveReceive)
+Help on method directiveReceive in module devices.protocol_bases.nvme_base:
+
+directiveReceive(self, NSID=None, DSPEC=0, DTYPE=0, DOPER=1, NUMD=None, DW12=0, DW13=0) method of devices.protocol_bases.nvme_base.NVMEWindowsBase instance
+    Brief:
+        directiveReceive(NSID=None, DSPEC=0, DTYPE=0, DOPER=1, NUMD=None, DW12=0, DW13=0) - Sends an NVMe Directive Receive Command
+
+    Description:
+        This is a raw command to specify the individual parameters for the NVMe Directive Receive Command
+
+    Argument(s):
+        NSID - (Optional; Defaults to None) - The namespace id. If None, uses getNamespaceID()
+        DSPEC - (Optional; Defaults to 0) - Directive Specific field
+        DTYPE - (Optional; Defaults to 0) - Directive Type field
+        DOPER - (Optional; Defaults to 1) - Directive operation to perform
+        NUMD - (Optional; Defaults to None) - The Number of DWords for the data transfer for this command. If None, uses a lookup 'table'.
+                                                This is a 0-based value.
+        DW12 - (Optional; Defaults to 0) - Raw DWord 12
+        DW13 - (Optional; Defaults to 0) - Raw DWord 13
+
+    Return Value(s):
+        True on Success, False on failure.
+
+    Example:
+        directiveReceive(NSID=1, DSPEC=0, DTYPE=0, DOPER=1, NUMD=None, DW12=0, DW13=0) -> True
+
+    Related:
+        directiveSend()
+
+    Author(s):
+        Charles Machalow
+
+twidl>
+***********************************************************************************************************************************************
+Namespace
+**********************************************************************************************************************************************
+twidl>help(namespaceManagement)
+Help on method namespaceManagement in module devices.protocol_bases.nvme_base:
+
+namespaceManagement(self, NSID=1, SEL=0, buffer=None) method of devices.protocol_bases.nvme_base.NVMEWindowsBase instance
+    Brief:
+        namespaceManagement(NSID=1, SEL=0, buffer=None) -  Create/Delete a namespace
+
+    Description:
+        Used to create/delete a namespace by providing the spec defined namespace struct in the buffer (384B)
+
+    Argument(s):
+
+        NSID - (Optional; Defaults to 1) The namespace ID within the device to read from.
+        SEL  - (Optional; Defaults to 0) 0=Create, 1=Delete namespace
+        buffer - (Defaults to None/wbuf) Buffer holding the namespace struct
+
+    Return Value(s):
+        True on Success, False on Failure
+
+    Example:
+         namespaceManagement(NSID=4, SEL=1) -> True
+
+    Related:
+        namespaceAttachment
+
+    Author(s):
+        Drew Knerr, Charles Machalow, Adonay Berhe
+
+twidl>
+
+
+twidl>help(namespaceAttachment)
+Help on method namespaceAttachment in module devices.protocol_bases.nvme_base:
+
+namespaceAttachment(self, NSID=1, SEL=0, buffer=None, controllersList=None) method of devices.protocol_bases.nvme_base.NVMEWindowsBase instance
+    Brief:
+        namespaceAttachment(NSID=1, SEL=0, buffer=None, controllersList=None) -  Attach/Detech a namespace from a controller
+
+    Description:
+        Used to Attach/Detech a namespace by providing the spec defined namespace struct in the buffer (384B)
+
+    Argument(s):
+        NSID - (Optional; Defaults to 1) The namespace ID within the device to read from.
+        SEL  - (Optional; Defaults to 0) 0=Attach, 1=Detach namespace
+        buffer - (Defaults to None/wbuf) Buffer holding the namespace struct
+        controllersList - (Defaults to None) If given, a list of controller ids to attach/detach the given namespace from.
+
+    Return Value(s):
+        True on Success, False on Failure
+
+    Example:
+         namespaceAttachment(NSID=4, SEL=1) -> True
+
+    Related:
+        namespaceManagement()
+
+    Author(s):
+        Drew Knerr, Charles Machalow
+
+twidl>
+
+
+***********************************************************************************************************************************************
+NVMe IO Commands
+************************************************************************************************************************************************
+1.Dataset Management Command
+
+twidl>help(nvmeDatasetManagement)
+Help on method nvmeDatasetManagement in module devices.protocol_bases.nvme_base:
+
+nvmeDatasetManagement(self, NSID=1, NR=None, IDR=0, IDW=0, AD=0, lbaBuffer=None, trimLBAList=[], trimSizeList=[], trimContextAttribList=[]) method of devices.protocol_bases.nvme_base.NVMEWindowsBase instance
+    Brief:
+        datasetManagement(NSID=1, NR=None, IDR=0, IDW=0, AD=0, lbaBuffer=None, trimLBAList=[], trimSizeList=[], trimContextAttribList=[]) - Builds and send the NVME DatasetManagement command.
+          The DatasetStruct/LBARangeInfo is to be placed in the writeBuffer prior to sending.
+
+    Description:
+        Builds and send the NVME DatasetManagement command.
+
+    Argument(s):
+        NSID - (Optional; Defaults to 1) The namespace ID within the device to read from.
+        NR   - (Optional; Defaults to None) The number of LBA Ranges specified in command. This is a 0's based value. Max = 255. If None, uses len(trimLBAList) - 1
+        IDR  - (Optional; Defaults to 0) Flag if the data set should be optimized for read access as an integral unit.
+        IDW  - (Optional; Defaults to 0) Flag if the data set should be optimized for write access as an integral unit.
+        AD   - (Optional; Defaults to 0) Flag to allow the NVM subsystem to deallocate all provided ranges.
+        lbaBuffer - (Optional: If None, Defaults to TWIDL write buffer)
+        trimLBAList - (Optional; Defaults to []) Optional list of lbas to trim.
+            Length must equal length of trimSizeList.
+        trimSizeList - (Optional; Defaults to []) Optional list of size to trim.
+            Length must equal length of trimLBAList.
+        trimContextAttribList - (Optional; Defaults to []) Optional list of context attributes to trim.
+            Length must equal length of trimLBAList or == 1. If length is 1, this attribute is applied to ALL ranges
+
+    Return Value(s):
+        True on Success, False on Failure
+
+    Example:
+        datasetManagement(NSID=1, NR=1, LBARangeInfo=myBuffer)
+        This writes 2 LBA range structs for namespace 1.
+        The LBARangeInfo buffer must be 2 * 16B in size and contain the structs defined in Figure 114 of spec as:
+            Bytes 00-03 = Context Attributes
+            Bytes 04-07 = Length in logical blocks
+            Bytes 08-15 = Starting LBA
+
+    Related: -
+
+    Author(s):
+-- More  --
+
+
+
+********************************************************************************************************************************************
+2.write zeros commnd
+
+
+twidl>help(nvmeWriteZeroes)
+Help on method nvmeWriteZeroes in module devices.protocol_bases.nvme_base:
+
+nvmeWriteZeroes(self, NSID=4294967295L, SLBA=0, LR=0, FUA=0, PRINFO=0, NLB=1, ILBRT=0, LBATM=0, LBAT=0, DEAC=0) method of devices.protocol_bases.nvme_base.NVMEWindowsBase instance
+    Brief:
+        nvmeWriteZeroes(NSID=0xFFFFFFFF, SLBA=0, LR=0, FUA=0, PRINFO=0, NLB=1, ILBRT=0, LBATM=0, LBAT=0, DEAC=0)
+        Used to set a range of logical blocks to zero.
+
+    Description:
+        The Write Zeroes command is used to set a range of logical blocks to zero. After successful completion
+        of this command, the value returned by subsequent reads of logical blocks in this range shall be zeroes
+        until a write occurs to this LBA range. The metadata for this command shall be all zeroes and the
+        protection information is updated based on CDW12.PRINFO.
+
+    Argument(s):
+        NSID   - (Optional; Defualts to 0xFFFFFFFF) - Namespace ID.
+        SLBA   - (Optional; Defaults to 0) - Starting LBA. 64 bit address of the first logical block to be written as part
+            of this operation.
+        LR     - (Optional; Defaults to 0) - Limited Retry. If set to 1, the controller should apply limited retry efforts.
+            If set to 0, the controller should try all available error recovery means to write the data to the NVM.
+        FUA    - (Optional; Defaults to 0) - Force Unit Access. Indicates that the data shall be written to non-volatile
+            media before indicating command completions.
+        PRINFO - (Optional; Defaults to 0) - Protection Information Field. Specifies the protection information action and check field.
+        NLB    - (Optional; Defaults to 1) - Number of Logical Blocks. Number of logical blocks to be written
+        ILBRT  - (Optional; Defaults to 0) - Initial Logical Block Reference Tag. Only used if the namespace is formatted to use
+            end-to-end protection information.
+        LBATM  - (Optional; Defaults to 0) - Logical Block Application Tag Mask. Only used if the namespace is formatted to use
+            end-to-end protection information.
+        LBAT   - (Optional; Defaults to 0) - Logical Block Application Tag. Only used if the namespace is formatted to use
+            end-to-end protection information.
+        DEAC   - (Optional; Defaults to 0) - If set to 1, then deallocate and possible write all bytes to 0. If 0, either is possible.
+
+    Return Value(s):
+        True on success, False on failure
+
+    Related:
+        -
+
+    Author(s):
+        Charles Machalow
+
+twidl>
+
+****************************************************************************************************************************************************
+3.Write Uncorrectable
+
+twidl>help(nvmeWriteUncorrectable)
+Help on method nvmeWriteUncorrectable in module devices.protocol_bases.nvme_base:
+
+nvmeWriteUncorrectable(self, LBA=0, blockcount=1, NSID=1) method of devices.protocol_bases.nvme_base.NVMEWindowsBase instance
+    Brief:
+        nvmeWriteUncorrectable(LBA=0, blockcount=1, NSID=1) - Builds and sends the NVME IO WriteUncorrectable command.
+
+    Description:
+        - Builds and sends the NVME IO WriteUncorrectable command.
+        Sets the various byte values based on the supplied parameters.
+
+    Argument(s):
+        LBA - (Optional; Defaults to 0) The starting LBA to begin reading from.
+        blockcount  - (Optional; Defaults to 1) The number of logical blocks to flag. (NOT a 0's based value here)
+        NSID - (Optional; Defaults to 1) The namespace ID within the device to read from.
+
+    Return Value(s):
+        True on Success, False on Failure
+
+    Example:
+        nvmeWriteUncorrectable(LBA=0, blockcount=1, NSID=2)  -> True
+        Marks 4 LBAs starting at 0xFF of namespace ID 2.
+
+    Related:
+        nvmeWrite()
+
+    Author(s):
+        Drew Knerr, Craig Deitering
+
+twidl>
+
+******************************************************************************************************************************************
+4.Read and Write
+
+twidl>help(nvmeRead)
+Help on method nvmeRead in module devices.protocol_bases.nvme_base:
+
+nvmeRead(self, SLBA=0, NLB=1, NSID=4294967295L, LR=True, FUA=False, PRINFO=0, accessFrequency=0, accessLatency=0, sequentialRequest=False, incompressible=False, EILBRT=0, ELBATM=0, ELBAT=0) method of devices.protocol_bases.nvme_base.NVMEWindowsBase instance
+    Brief:
+        nvmeRead(self, SLBA=0, NLB=1, NSID=0xFFFFFFFF, LR=True, FUA=False, PRINFO=0, accessFrequency=0, accessLatency=0, sequentialRequest=False, incompressible=False, EILBRT=0, ELBATM=0, ELBAT=0) -
+            Spec NVMe Read command.
+
+    Description:
+        Calling read() will perform a SCSI read. This command will perform a NVMe read.
+            In theory, they are both reading from the same drive and should yield similar results.
+                read(0, 1) should be similar to nvmeRead(0, 0)
+
+    Argument(s):
+        SLBA - (Optional; Defaults to 0) - Starting LBA
+        NLB - (Optional; Defaults to 1) - Number of logical blocks. This is a 0-based value.
+        NSID - (Optional; Defaults to 0xFFFFFFFF) - The namespace id. If 0xFFFFFFFF, will use getNamespaceID() to set the command's NSID
+        LR - (Optional; Defaults to True) - Limited retry
+        FUA - (Optional; Defaults to False) - Forced unit access
+        PRINFO - (Optional; Defaults to 0) - Phyiscal region info
+        accessFrequency - (Optional; Defaults to 0) - Access frequency (Part of Dataset Management)
+        accessLatency - (Optional; Defaults to 0) - Access Latency (Part of Dataset Management)
+        sequentialRequest - (Optional; Defaults to False) - Sequential Request (Part of Dataset Management)
+        incompressible - (Optional; Defaults to False) - Incompressible (Part of Dataset Management)
+        EILBRT - (Optional; Defaults to 0) - Expected initial logical block reference tag
+        ELBAT - (Optional; Defaults to 0) - Expected logical block application tag
+        ELBATM - (Optional; Defaults to 0) - Expected logical block application tag mask
+
+    Return Value(s):
+        True on success. False on failure.
+
+    Example:
+        nvmeRead(SLBA=0, NLB=1) -> True
+
+    Related:
+        nvmeWrite
+
+    Author(s):
+        Charles Machalow
+
+twidl>
+
+
+twidl>help(nvmeWrite)
+Help on method nvmeWrite in module devices.protocol_bases.nvme_base:
+
+nvmeWrite(self, SLBA=0, NLB=1, NSID=4294967295L, LR=True, FUA=False, PRINFO=0, accessFrequency=0, accessLatency=0, sequentialRequest=False, incompressible=False, ILBRT=0, LBATM=0, LBAT=0, DTYPE=0, DSPEC=0) method of devices.protocol_bases.nvme_base.NVMEWindowsBase instance
+    Brief:
+        nvmeWrite(self, SLBA=0, NLB=1, NSID=0xFFFFFFFF, LR=True, FUA=False, PRINFO=0, accessFrequency=0, accessLatency=0, sequentialRequest=False, incompressible=False, ILBRT=0, LBATM=0, LBAT=0, DTYPE=0, DSPEC=0) -
+            Spec NVMe Write command.
+
+    Description:
+        Calling write() will perform a SCSI write. This command will perform a write.
+            In theory, they are both writing to the same drive and should yield similar results.
+                write(0, 1) should be similar to nvmeWrite(0, 0)
+
+    Argument(s):
+        SLBA - (Optional; Defaults to 0) - Starting LBA
+        NLB - (Optional; Defaults to 1) - Number of logical blocks. This is a 0-based value.
+        NSID - (Optional; Defaults to 0xFFFFFFFF) - The namespace id. If 0xFFFFFFFF, will use getNamespaceID() to set the command's NSID
+        LR - (Optional; Defaults to True) - Limited retry
+        FUA - (Optional; Defaults to False) - Forced unit access
+        PRINFO - (Optional; Defaults to 0) - Phyiscal region info
+        accessFrequency - (Optional; Defaults to 0) - Access frequency (Part of Dataset Management)
+        accessLatency - (Optional; Defaults to 0) - Access Latency (Part of Dataset Management)
+        sequentialRequest - (Optional; Defaults to False) - Sequential Request (Part of Dataset Management)
+        incompressible - (Optional; Defaults to False) - Incompressible (Part of Dataset Management)
+        ILBRT - (Optional; Defaults to 0) - Initial logical block reference tag
+        LBATM - (Optional; Defaults to 0) - Logical block application tag mask
+        LBAT - (Optional; Defaults to 0) - Logical block application tag
+        DTYPE - (Optional; Defaults to 0) - The directive type
+        DSPEC - (Optional; Defaults to 0) - Directive specific value
+
+    Return Value(s):
+        True on success. False on failure.
+
+    Example:
+        nvmeWrite(SLBA=0, NLB=1) -> True
+
+    Related:
+        nvmeRead
+
+-- More  --
+
+************************************************************************************************************************************************
+5.Compare
+
+twidl>help(nvmeCompare)
+Help on method nvmeCompare in module devices.protocol_bases.nvme_base:
+
+nvmeCompare(self, LBA=0, blockcount=1, NSID=1, PRINFO=0, FUA=0, LR=0, EILBRT=0, ELBAT=0, ELBATM=0, compareBuffer=None) method of devices.protocol_bases.nvme_base.NVMEWindowsBase instance
+    Brief:
+        compare(LBA=0, blockcount=1, NSID=1, PRINFO=0, FUA=0, LR=0, EILBRT=0, ELBAT=0, ELBATM=0, compareBuffer=None) - Builds and send the NVME Compare command.
+          Sets the various byte values based on the supplied parameters.
+
+    Description:
+
+    Argument(s):
+        LBA - (Optional; Defaults to 0) The starting LBA to begin reading from.
+        blockcount  - (Optional; Defaults to 1) The number of logical blocks to read. This is a 0's based value
+        NSID - (Optional; Defaults to 1) The namespace ID within the device to read from.
+        PRINFO - (Optional; Defaults to 0) Protection action information Figure 101 in spec.
+        FUA  - (Optional; Defaults to 0) Flag if data shall be read from non-volatile media
+        LR   - (Optional; Defaults to 0) If 1, controller should apply limited retry efforts.
+        EILBRT - (Optional; Defaults to 0) Intiial Logical Block Refrence Tag Expected value. Ignored if namespace is formatted.
+        ELBAT - (Optional; Defaults to 0)  Application Tag Expected Value
+        ELBATM - (Optional; Defaults to 0) Application Tag Mask Expected Value
+        compareBuffer  - (Optional; If None, defaults to TWIDL WriteBuffer) Buffer containing data to compare against. Should be lbaSize * blockcount in bytes.
+        compareMetaBuffer -(Optional; Defaults to None/Empty) Buffer containing meta data to compare against. Should be lbaSize * blockcount in bytes if used.
+
+    Return Value(s):
+        True on Success, False on Failure
+
+    Example:
+        nvmeCompare(LBA=0, blockcount=1, NSID=1, compareBuffer=myCompare)
+        This reads back 1 LBA blocks from namespace 1, starting at LBA index 0.
+        The command will use the data preloaded in myCompare buffer to compare against.
+        The returned CE, will determine if the compare passed correctly or if there are other errors.
+
+    Related: -
+
+    Author(s):
+        Drew Knerr, Craig Deitering
+
+twidl>
+
+***********************************************************************************************************************************************
+twidl>help(nvmeReset)
+Help on method nvmeReset in module commands.nvme_reset_cmd:
+
+nvmeReset(self, quiet=True, controllerReadyWaitTime=None, maxPhysicalHandleAttempts=20, updateDriveHandle=True, skipResetIOCTL=False, commandOnly=False) method of commands.nvme_reset_cmd.NVMeResetCmd instance
+    Brief:
+        nvmeReset(quiet=True, controllerReadyWaitTime=None, maxPhysicalHandleAttempts=20, updateDriveHandle=True, skipResetIOCTL=False, commandOnly=False) -  Reset the nvme controller and reinitialize the drive.
+
+    Description:
+        Signals NVMe driver to start NVMe reset process. If this fails, the drive was either unable to return from
+           the controller reset (CSTS.RDY not == 1) or an intialization command afterwards (identify, get/setFeatures, IOQs)
+
+    Argument(s):
+         quiet - (Optional; Defaults to True) If True, will not print extra debug information.
+         controllerReadyWaitTime - (Optional; Defaults to None) Set how long to wait for the driver to return back stating CSTS.RDY == 1
+                                   instead of retreiving and using the CAP.TO from the controller reigsters. Only used on Windows.
+         maxPhysicalHandleAttempts - (Optional; Defaults to 20) Number of attempts to rescan the TDK (poll all drive handles) for a
+                                   physical handle (namespace) that matches to this drive's controller.
+         updateDriveHandle - (Optional; Defaults to True) - Updates the drive handle. Only used on Windows.
+         skipResetIOCTL - (Optional; Defaults to False) - Prevents the actual call to the Windows driver reset IOCTL, therefore the device
+                                                          is not instructed to reset. Used for UART unlocking and debug purposes only on Windows.
+         commandOnly - (Optional; Defaults to False) If True, return immediately after nvmeReset command issued,
+                                                     bypassing any logic to wait for CSTS.RDY == 1.
+
+    Return Value(s):
+        True on Success, False on Failure
+
+    Example:
+        nvmeReset() -> True
+
+    Author(s):
+        Drew Knerr, Charles Machalow
+
+twidl>
+
+
+
+
+
+twidl>help(warmReset)
+Help on method warmReset in module commands.nlba_generic_cmd:
+
+warmReset(self, quiet=True) method of commands.nlba_generic_cmd.NLBAGenericNVMeCmd instance
+    Brief:
+        warmReset(quiet=True) - Send a warm reset command to the device.
+
+    Description:
+        Sets the cpu Reset pending flag via NLBA -15 and then Signals NVMe driver to start NVMe reset process.
+          If this fails, the drive was either unable to return from the controller reset (CSTS.RDY not == 1)
+          or an intialization command afterwards (identify, get/setFeatures, IOQs)
+
+    Argument(s):
+        quiet - (Optional; Defaults to True) If False, the function will print additional debug information.
+
+    Return Value(s):
+        True on Success, False on Failure
+
+    Example:
+        warmReset() -> True
+
+    Author(s):
+        Drew Knerr Charles Machalow
+
+twidl>
+
+
+
+twidl>help(edump)
+Help on method assertDumpErase in module commands.assertdump_cmd:
+
+assertDumpErase(self) method of commands.assertdump_cmd.AssertDumpCmd instance
+    Brief:
+        assertDumpErase() - Erases the assert dump from the drive.
+
+    Description: -
+        Erases the assert failure data from the Drive's nand. Uses NLBA -28.
+        This command will clear the Drive from the "asserted" Disable Logical state when next reset.
+    Argument(s):
+        None
+
+    Return Value(s):
+        True if command successful, else False
+
+    Example:
+        devObj.assertDumpErase() -> True
+
+    Related: -
+        readAssertDump(), writeAssertDump(), parseAssert(), structAssert(), assertDumpTest(), assertDumpRead(), assertDumpWrite()
+
+    Author(s):
+        Craig Hathaway
+
+twidl>
+
+
+twidl>help(llf)
+Help on method lowLevelFormat in module commands.nlba_generic_cmd:
+
+lowLevelFormat(self, timeout=600) method of commands.nlba_generic_cmd.NLBAOtherCmd instance
+    Brief:
+        lowLevelFormat(timeout=600) - Issues LLF to the drive.
+
+    Description:
+        Create the logical format (Context) needed for normal lba reads and
+        writes to the Drive.  This command initializes the Drive's
+        indirection system as empty, and erases the entire customer area of
+        the Drive.  All previous data stored in logical space is lost; a
+        read of any lba will return all zeros until re-written.  This
+        command is allowed even if the Drive is in Disable Logical mode,
+        such as NO CONTEXT or BAD CONTEXT. Uses NLBA -5.
+
+    Argument(s):
+        timeout - (Optional; Defaults to 600) Time (in seconds) OS
+            will wait for command to complete before returning failed.
+                Note that TWIDL will use the max of this number and the result of getTimeOut()
+                    as the actual timeout passed down the chain.
+
+    Return Value(s):
+        True if command successful, else False
+
+    Example:
+        devObj.lowlevelformat() -> True
+
+    Related: -
+
+    Author(s):
+        Brian Ramming, Charles Machalow
+
+twidl>
+
+************************************************************************************************************************************
+twidl>help(firmwareActivate)
+Help on method firmwareActivate in module devices.protocol_bases.nvme_base:
+
+firmwareActivate(self, FS=0, AA=0, BPID=False) method of devices.protocol_bases.nvme_base.NVMEWindowsBase instance
+    Brief:
+        firmwareActivate(FS=0, AA=0, BPID=False) - Firmware slot 1 used for this cmd. Action is to activate FW on next reset.
+
+    Description:
+        Used to verify a valid firmware image has been downloaded
+           and to commit that revisiion to a specific firmware slot.
+
+    Argument(s):
+        FS - (Defaults to 0) This is the firmware slot to use. A value of 0 lets the ctrlr decide. Range is 0-7. Slots 1-7.
+        AA - (Defaults to 0) Action to take. Range is 0-2.
+            0 (00b) = The last downloaded image replaces the image in slot FS, but is not activated.
+            1 (01b) = The last downloaded image replaces the image in slot FS, and is activated on next reset.
+            2 (10b) = The image currently contained in slot FS will be activated at next reset.
+            3 (11b) = The image is activated without reset
+            6 (110b) = Downloaded image replaces the boot partition specified by the BPID field
+            7 (111b) = Mark the Boot Partition specified in the BPID field as active and update BPINFO.ABPID
+            Else = Reserved
+        BPID - (Defaults to False) Boot partition id. (NVMe 1.3+)
+
+    Return Value(s):
+        True on Success, False on Failure
+
+    Example:
+        firmwareActivate(FS=1, AA=2) -> True
+
+    Related:
+        firmwareImageDownload()
+
+    Author(s):
+        Drew Knerr, Craig Deitering
+
+twidl>help(firmwareDownloadAndActivate)
+Help on method firmwareDownloadAndActivate in module devices.protocol_bases.nvme_base:
+
+firmwareDownloadAndActivate(self, filename=None, transferSize=1024, activateAction=1, quiet=True, firmwareBuffer=None, Pad4KAlignment=True, firmwareSlot=0, bootParititionId=False) method of devices.protocol_bases.nvme_base.NVMEWindowsBase instance
+    Brief:
+        firmwareDownloadAndActivate(filename=None, transferSize=1024, activateAction=1, quiet=True, firmwareBuffer=None, Pad4KAlignment=True, firmwareSlot=0, bootParititionId=False)
+          Reads bin file into internal write buffer, downloads in 4K chunks, which will be placed in slot 1.
+
+    Description:
+        Reads the entire BIN file into the internal write buffer, wbuf (unless one is provided), and calls
+          the spec NVMe firmwareImageDownload command to sequentially write portions of transferSize (DWs)
+          until the entire image is on the device. If this is successful, firmwareActivate is called with
+          firmwareSlot=0 (device decides slot) and provided activateAction.
+        Note that the firmware will never be immediately activated until a warm reset or power cycle
+          is initiated, depending on the activate action the user has chosen.
+        Fultondale requires a padded 4K aligned FW buffer as of PRQ.
+
+    Argument(s):
+        filename - (Required)     The file name containing the firmware image.
+        transferSize - (Defaults to 1024) Maximum number of DWs to transfer per imageDownload call.
+                                          If zero value provided, the transferSize will be calculated to be
+                                            the lowest 4K multiple that handles the entire image in one transfer
+                                          Fultondale requires a multiple of 1024DW (4KB)
+        activateAction - (Defaults to 1) Value to pass to firmwareActivate.
+        quiet - (Optional; Defaults to True) If False be verbose in printing status
+        firmwareBuffer - (Optional; Defaults to None) Buffer to use instead of rbuf. If not given, use rbuf.
+        Pad4KAlignment - (Optional; Defaults to True) If True, forces each segment written to be padded to 4K alignment
+        firmwareSlot - (Optional; Defaults to 0) The Firmware slot to target
+        bootParititionId - (Optional; Defaults to False) If given, the boot partition id (BPID) to use (NVMe 1.3+)
+
+    Return Value(s):
+        True on Success, False on Failure
+
+    Example:
+        firmwareDownloadAndActivate(filename="8DAAX311.bin", transferSize=1024, activateAction=1) -> True
+
+    Related:
+        firmwareImageDownload()
+        firmwareActivate()
+-- More  --
+
+
+twidl>help(firmwareImageDownload)
+Help on method firmwareImageDownload in module devices.protocol_bases.nvme_base:
+
+firmwareImageDownload(self, NUMD=1024, OFST=0, imageBuffer=None) method of devices.protocol_bases.nvme_base.NVMEWindowsBase instance
+    Brief:
+        firmwareImageDownload(NUMD=1024, OFST=0, imageBuffer=None) - Instructs controller to download 4096B of the image
+          contained in the writeBuffer, and write it internally at an offset of 512B.
+
+    Description:
+        Download all or a portion of the firmware image for a future update to the controller.
+
+    Argument(s):
+        NUMD - (Defaults to 1024) The number of DW contained in this command's payload
+                                  Fultondale's FAS states that the chunk size cannot be less than 4K / 1024DW.
+        OFST - (Defaults to 0) The offset that the controller should put the first byte of this payload into
+        imageBuffer - (Required: Defaults to TWIDL write buffer) This is the user-defined buffer containing the firmware contents to pass to the controller
+
+    Return Value(s):
+        True on Success, False on Failure
+
+    Example:
+        firmwareImageDownload(NUMD=1024, OFST=512, imageBuf) -> True
+
+    Related:
+        firmwareActivate()
+
+    Author(s):
+        Drew Knerr, Craig Deitering
+
+twidl>
+
+
+*************************************************************************************************************************************************
+twidl>help(parseGetLogPage)
+Help on method parseGetLogPage in module commands.nvme_log_pages_cmd:
+
+parseGetLogPage(self, NUMD=None, LID=3, NSID=1, logPageBuffer=None, ioFile=None, LSP=0, LSI=0, UUIDIndex=0) method of commands.nvme_log_pages_cmd.NVMeLogPagesCmd instance
+    Brief:
+        parseLogPage(NUMD=None, LID=0x03, NSID=1, logPageBuffer=None, ioFile=None, LSP=0, UUIDIndex=0) - Issues Get Log Page command with supplied NUMD and LID specifiers
+            supplied NUMD and LID specifiers and, if used, the NSID and prints out the page.
+
+    Argument(s):
+        NUMD - (Optional; Defaults to None) 0-based value for number of DWords for the return buffer. If None, will use lookup table
+        LID  - (Optional; Defaults to 0x03) Log Page Identifier. Default's to firmware slot information.
+        NSID - (Optional; Defaults to 0x01) Namespace ID to be used with applicable LIDs.
+        logPageBuffer (Optional; If None, defaults to TWIDL Read Buffer) User supplied buffer to copy the returned PRP buffer into for the user to have within TWIDL.
+        LSP - (Optional; Defaults to 0) Log Specific Field
+        LSI - (Optional; Defaults to 0) Log Specific Identifier
+        UUIDIndex - (Optional; Defaults to 0) UUID index
+
+    Return Value(s):
+        True on Success, False on Failure
+
+    Example:
+        parseLogPage(NUMD=32, LID=0x01, NSID=1, logPageBuffer=rbuf, LSP=0) -> True
+        Sends Get Log Page command for the LID and prints out the detailed page
+
+    Related:
+        getLogPage
+
+    Author(s):
+        Drew Knerr, Charles Machalow
+
+twidl>
+
+
+twidl>help(parseGetLBAStatus)
+Help on method parseGetLBAStatus in module devices.protocol_bases.nvme_base:
+
+parseGetLBAStatus(self, SLBA, MNDW, ATYPE, RL, NSID=1, outFile=None) method of devices.protocol_bases.nvme_base.NVMEWindowsBase instance
+    Brief:
+        parseGetLBAStatus(SLBA, MNDW, ATYPE, RL, outFile=None) - NVMe 1.4 Get LBA Status Command
+
+    Description:
+        See the NVMe Specification for details/specifics.
+
+    Argument(s):
+        SLBA - (Required) - Starting LBA addressed by this command.
+        MNDW - (Required) - Maximum Number of DWords to return. (0 based)
+        ATYPE - (Required) - Action Type field that specifies the mechanism the controller uses in determining status.
+        RL - (Required) - Range Length of contiguous LBAs beginning at SLBA.
+        NSID - (Optional; Defaults to 1) - The NameSpace ID
+        outFile - (Optional; Defaults to None) - If given, a file path to parse output to. Otherwise, uses stdout.
+
+    Return Value(s):
+        True on success, False on failure
+
+    Example:
+        parseGetLBAStatus(SLBA=0, MNDW=7, ATYPE=0, RL=0) -> True
+
+    Related:
+        structGetLBAStatus, unionGetLBAStatus
+
+    Author(s):
+        Adonay Berhe
+
+twidl>
+
+twidl>help(parseLastNVMeStatus)
+Help on method parseLastNVMeStatus in module devices.protocol_bases.nvme_base:
+
+parseLastNVMeStatus(self, debug=False, asyncCE=False) method of devices.protocol_bases.nvme_base.NVMEWindowsBase instance
+    Brief:
+        parseLastNVMeStatus(debug=False, asyncCE=False) - Parses and verbosely prints the last completion entry
+
+    Description:
+        If the last NVMe command was successful, parses the completion entry. Otherwise prints the TDK error code.
+
+    Argument(s):
+        debug - (Optional; Defaults to False) If True, prints debug information.
+
+    Return Value(s):
+        None
+
+    Example:
+        parseLastNVMeStatus()
+
+    Related: -
+        getLastNVMeStatus()
+
+    Author(s):
+        Drew Knerr, Charles Machalow
+
+twidl>
+
+
+twidl>help(parseIdentifyController)
+Help on method parseIdentifyController in module devices.protocol_bases.nvme_base:
+
+parseIdentifyController(self, identifyBuffer=None, ioFile=None, verbose=False, UUIDIndex=0) method of devices.protocol_bases.nvme_base.NVMEWindowsBase instance
+    Brief:
+        parseIdentifyController(identifyBuffer=None, ioFile=None, verbose=False, UUIDIndex=0) - Issues and parses NVMe Identify command with get controller information
+
+    Description:
+        Issues the NVMe Identify command with the get controller information
+        opcode, places into the ASQ, rings doorbell, waits for completion, and
+        parses CE when present. PreReq. >createAdminQueues< AQs created and device enabled.
+
+    Argument(s):
+        identifyBuffer - (Optional: If None, Defaults to TWIDL ReadBuffer ). Buffer to read the Identify Controller data into.
+        ioFile - (Optional; Defaults to None) Name of the file to save the parsed Identify
+            information to. Default is None, which will print to the screen.
+        verbose - (Optional; Defaults to False) If True be more verbose
+        UUIDIndex - (Optional; Defaults to 0) The UUID index.
+
+
+    Return Value(s):
+        True on Success, False on Failure
+
+    Example:
+        parseIdentifyController() -> True
+
+    Related:
+        parseIdentifyNamespace()
+
+    Author(s):
+        Drew Knerr, Charles Machalow
+
+twidl>
+
+************************************************************************************************************************************************
+twidl>help(setBuffer)
+Help on method setBuffer in module device:
+
+setBuffer(self, buffer=None, ch=0, bytes=512, offset=0) method of devices.products.arbordale_plus.ArbordalePlus instance
+    Brief:
+        setBuffer(buffer=None, ch=0x0,  bytes=512, offset=0) - Memset the buffer with the given char for
+        given bytes at the given offset.
+
+    Description:
+
+    Argument(s):
+        buffer - (Optional; Defaults to None) Will default to read buffer. Buffer you want to
+            fill.
+        ch - (Optional; Defaults to 0x0) Value you want to set in the buffer.
+        bytes - (Optional; Defaults to 512) Number of bytes to set.
+        offset - (Optional; Defaults to 0) Offset in the buffer to start from
+
+    Return Value(s):
+        None
+
+    Example:
+        setBuffer(getwriteBuffer(), 0, 512, 1) -> memsets 512 bytes with 0 at offset 1 in the writeBuffer
+
+    Related: -
+
+    Author(s):
+        Ofer Levy, Charles Machalow
+
+twidl>
+*********************************
+twidl>help(parseIdentifyNVMe)
+Help on method parseIdentifyNVMe in module devices.protocol_bases.nvme_base:
+
+parseIdentifyNVMe(self, NSID=0, CNS=1, CNTID=0, identifyBuffer=None, ioFile=None, verbose=False, NVMSETID=0, UUIDIndex=0, CSI=0) method of devices.protocol_bases.nvme_base.NVMEWindowsBase instance
+    Brief:
+        parseIdentifyNVMe(NSID=0, CNS=1, CNTID=0, identifyBuffer=None, ioFile=None, verbose=False, NVMSETID=0, UUIDIndex=0, CSI=0) - Issues and parses NVMe Identify Namespace list per 1.1+ spec
+
+    Description:
+        Creates the NVMe Identify command with the get namespace list
+        CNS/CNDTIS value, places into the ASQ, rings doorbell, waits for completion, and
+        parses CE when present. PreReq. >createAdminQueues< AQs created and device enabled.
+
+    Argument(s):
+        NSID - (Optional; Defaults to 0) The namespace ID to return the identify data for
+        CNS - (Optional; Defaults to 1) The CNS value to use. 0=NSID, 1=CTRLR, 2=NSList, etc.
+        CNTID - (Optional; Defaults to 0) The Cntrlr ID to use, if supported or used for this CNS/NSID combo.
+        identifyBuffer - (Optional; Defaults to None) Buffer to read the Identify Controller data into.  Uses TWIDL read buffer if none is provided.
+        ioFile - (Optional; Defaults to None) Name of the file to write out to.
+        verbose - (Optional; Defaults to False) Prints out more information or not.
+        NVMSETID - (Optional; Defaults to 0) The identifier of the NVM Set.
+        UUIDIndex - (Optional; Defaults to 0) The UUID index.
+        CSI - (Optional; Defaults to 0) - Command Set id
+
+    Return Value(s):
+        True on Success, False on Failure
+
+    Example:
+        parseIdentifyNamespaceList() -> True
+
+    Related: -
+        parseIdentifyController()
+        parseIdentifyNamespaceList()
+
+    Author(s):
+        Drew Knerr, Kim Ninh
+
+twidl>
+
+
+*************************************************
+getWriteBuffer(     getWriteBufferSize(
+twidl>help(getWriteBuffer)
+Help on method getWriteBuffer in module device:
+
+getWriteBuffer(self) method of devices.products.arbordale_plus.ArbordalePlus instance
+    Brief:
+        getWriteBuffer() - Returns a pointer to the write buffer
+
+    Description: -
+
+    Argument(s):
+        None
+
+    Return Value(s):
+        Binary Write Buffer Data
+
+    Example:
+        buff = getWriteBuffer()
+
+    Related: -
+
+    Author(s):
+        Ofer Levy
+
+twidl>
+**************************************************************************
+twidl>help(setDebug)
+Help on method setDebug in module util.logger:
+
+setDebug(cls, state, outFile=None) method of __builtin__.type instance
+    Brief:
+        setDebug(state, outFile=None) - Sets the level for the global logger. If outFile is given, will
+            print debug text to the file
+
+    Description:
+        If the debug flag value is set to true, TDK debug info is printed on each call
+
+    Argument(s):
+        state - (Required) valid states are 0,1,2,3,4,5 (logging.LOGGING_LEVEL.quiet, logging.LOGGING_LEVEL.error,
+            logging.LOGGING_LEVEL.warning, logging.LOGGING_LEVEL.info, logging.LOGGING_LEVEL.debug, logging.LOGGING_LEVEL.all)
+        outFile - (Optional; Defaults to None) - If None: Output goes to stdout
+                                                 If filename (string): file to write TDK debug info to
+
+    Return Value(s):
+        None
+
+    Example:
+        setDebug(1)
+        isDebug() -> True
+
+    Related:
+        isDebug()
+
+    Author(s):
+        Ofer Levy, Farzana Akhter, Charles Machalow
+
+twidl>
+
+
+******************************************************************
+twidl>help(tdump)
+Help on method assertDumpTest in module commands.assertdump_cmd:
+
+assertDumpTest(self) method of commands.assertdump_cmd.AssertDumpCmd instance
+    Brief:
+        assertDumpTest() - Test the assert functionality.
+
+    Description: -
+        Force the Drive to assert fail. Uses NLBA -30.
+    Argument(s):
+        None
+
+    Return Value(s):
+        True if command successful, else False
+
+    Example:
+        devObj.assertDumpTest() -> True
+
+    Related: -
+        readAssertDump(), writeAssertDump(), parseAssert(), structAssert(), assertDumpErase(), assertDumpRead(), assertDumpWrite()
+
+    Author(s):
+        Craig Hathaway
+
+twidl>
+
+
+*********************************************************************************
+twidl>help(writeTokenValue)
+Help on method writeTokenValue in module commands.fconfig_cmd:
+
+writeTokenValue(self, Token, Value) method of commands.fconfig_cmd.FConfigNVMeCmd instance
+    Brief:
+        writeTokenValue(Token, Value) - Write a specific value for a given
+            token.
+
+    Description:
+        Parse the binary data and updated the value for the specified token.
+        Uses test command -79.
+
+    Argument(s):
+        Token - (Required) The token identifier string you want to change
+            the value of. (eg: "MN" for model number)
+        Value - (Required) The value you want to give to the specified token.
+
+    Return Value(s):
+        True if successfully updated the token's value.
+        False if failed to read the FConfig structure or if failed to
+            write the new fconfig data.
+
+    Example:
+        writeTokenValue("MN","INTEL SSDSC2BA400G3") -> bool
+
+    Related:
+        fConfigClass(), readFConfig(), writeFConfig(), structFConfig(),
+        readTokenValue(), parseFConfig()
+
+    Author(s):
+        Brian Ramming
+
+twidl>
+
+__________________________________________________________
+twidl>help(unlock)
+Help on method unlock in module commands.asymmetric_diag_unlock_cmd:
+
+unlock(self, psid='ITISAGOODDAYTOVERIFYTHISINTELSSD', persist=None, server='nsg-adu.intel.com:8866', genNonce=True, unlockLevel=1) method of commands.asymmetric_diag_unlock_cmd.IntelAsymmetricDiagUnlockCmd instance
+    Brief:
+        unlock(psid="ITISAGOODDAYTOVERIFYTHISINTELSSD", persist=None, server=SIGNING_SERVER, genNonce = True, unlockLevel = 1) - Unlock the drive enabling drive privileged operations.
+
+    Description: Unlock the drive enabling drive privileged operations.
+                 setPsid() before enabling ADU (DU Token)
+                 unlock Procedure followed is,
+                  -> Generic Unlock - return True if ADU is not enabled else False
+                  -> if Generic Unlock has failed, GetDiagInfo and DiagUnlock will be sent to drive for unlocking the drive.
+                   Uses test command NLBA -335.
+    Argument(s):
+        psid - (Optional; Defaults to "ITISAGOODDAYTOVERIFYTHISINTELSSD") This value is the PSID programmed into the DUT.
+        persist - (Optional; Defaults to None) This value indicates whether the device will hold
+            the diagnostic unlock state across power cycles. If not provided, server defaults to False.
+        server - (Optional; Defaults to SIGNING_SERVER) Server to connect with as string. Defaults to Folsom
+            server location. If DiagnosticUnlock.exe and its other requirements are found in the C:\CertTools directory,
+                and an eTokenPassword is set in the TWIDL configurations.xml file, will attempt to sign with the eToken instead of the server.
+        genNonce - (Optional, Defaults to True) set to False to get old Nonce
+        unlockLevel - (Optional, Defaults to 1) Select which unlock level is required.
+                      Available unlock options  0 -> to lockback the drive.
+                                                1 -> to unlock general drive privileged operations.
+                                                2 -> to unlock drive with all and destructive privileges, DO NOT use this unless it is a guided use.
+
+    Return Value(s):
+        True if command successful, else False
+
+    Example:
+        devObj.unlock() -> True
+
+    Related:
+        signChallenge(),
+
+    Author(s):
+        Emma Fletcher, Wesley Jebadoss Utpal Solanki
+
+twidl>
+
+____________________________________________________________________________________________
+
+twidl>help(read)
+Help on method read in module devices.protocol_bases.scsi_base:
+
+read(self, LBA=0, blockcount=1, ioFile=None, offset=0, FUA=False, FUA_NV=False) method of devices.protocol_bases.scsi_base.SCSIBase instance
+    Brief:
+        read(LBA=0, blockcount=1, ioFile=None, offset=0, FUA=False, FUA_NV=False) - Generic read command. Uses
+        read16 for all drives.
+
+    Description: -
+
+    Argument(s):
+        LBA - (Optional; Defaults to 0) The LBA you want to access.
+        blockcount - (Optional; Defaults to 1) The number of blocks to read.
+        ioFile - (Optional; Defaults to None) Optional filename (string) to save the binary
+            data.
+        offset - (Optional; Defaults to 0) not yet implemented
+        FUA - (Optional; Defaults to False) Sets the FUA bit of SCSI Read. CDB Byte 1 Bit 3
+        FUA_NV - (Optional; Defaults to False) Sets the FUA_NV bit of SCSI Read. CDB Byte 1 Bit 1
+
+    Return Value(s):
+        True if command successful, else False
+
+    Example:
+        read(LBA=2, blockcount=1) -> True
+
+    Related: -
+
+    Author(s):
+        Brian Ramming, Emma Fletcher
+
+twidl>help(write)
+Help on method write in module devices.protocol_bases.scsi_base:
+
+write(self, LBA=0, blockcount=1, ioFile=None, offset=0, FUA=False, FUA_NV=False) method of devices.protocol_bases.scsi_base.SCSIBase instance
+    Brief:
+        write(LBA=0, blockcount=1, ioFile=None, offset=0, FUA=False, FUA_NV=False) - Generic write command. Uses
+            the write16 SCSI command.
+
+    Description: -
+
+    Argument(s):
+        LBA - (Optional; Defaults to 0) The LBA you want to access.
+        blockcount - (Optional; Defaults to 1) The number of blocks to write.
+        ioFile - (Optional; Defaults to None) Optional filename (string) to load and write to
+            the given LBA.
+        offset - (Optional; Defaults to 0) not yet implemented
+        FUA - (Optional; Defaults to False) Sets the FUA bit of SCSI Write. CDB Byte 1 Bit 3
+        FUA_NV - (Optional; Defaults to False) Sets the FUA_NV bit of SCSI Write. CDB Byte 1 Bit 1
+
+    Return Value(s):
+        True if command successful, else False
+
+    Example:
+        write(LBA=2, blockcount=1) -> True
+
+    Related: -
+
+    Author(s):
+        Brian Ramming, Emma Fletcher
+
+twidl>
+****************************************************************************************************************************
+twidl>help(parseGetFeatures)
+Help on method parseGetFeatures in module devices.protocol_bases.nvme_base:
+
+parseGetFeatures(self, FID=7, NSID=1, DW11=0, NUMD=None, buffer=None, ioFile=None, SEL=0, UUIDIndex=0) method of devices.protocol_bases.nvme_base.NVMEWindowsBase instance
+    Brief:
+        parseGetFeatures(FID=0x07, NSID=1, DW11=0, NUMD=None, buffer=None, ioFile=None, SEL=0, UUIDIndex=0) - Issues GetFeatures command, Rings doorball, waits for completeion and reaps CE.
+
+    Description:
+        Builds the GetFeatures cmd with supplied FID and, if used, NSID,
+        places cmd into the ASQ, rings doorbell, waits for completion, and parses CE when present.
+        PreReq. >createAdminQueues< AQs created and device enabled.
+
+    Argument(s):
+        FID - (Optional; Defaults to 0x07) Feature ID for the sent getFeatures nvme command
+        NSID - (Optional; Defaults to 0x01) Namespace ID, which is required and applicable to certain FID values. See spec.
+        DW11 - (Optional; Devaults to 0x00) For FIDs that require additional input into DW11, such as FID=0x09 to select the int vector.
+        NUMD - (Optional; Defaults to None) Number of dWords. If None is given, use lookup table to get value.
+        buffer - (Optional; Defaults to None) If None, use TWIDL read buffer, else, use this buffer for the operation.
+        ioFile - (Optional; Defaults to None) Place to put parsed output. If None, print to stdout.
+        SEL - (Optional; Defaults to 0) Specifies which value of the attributes to return in the provided data. See spec for more details.
+        UUIDIndex - (Optional; Defaults to 0) UUID index to use
+
+    Return Value(s):
+        True on Success, False on Failure
+
+    Example:
+        parseGetFeatures(0x07, 0x00) - Prints the parsed DW0 values for getFeature command for 'Num of Queues'
+
+    Author(s):
+        Drew Knerr
+
+twidl>
+&*****************************************************************************************************************
+twidl>help(nread)
+Help on method nread in module commands.nlba_generic_cmd:
+
+nread(self, lba, blockcount, outFile=None, inFile=None, offset=0) method of commands.nlba_generic_cmd.NLBAGenericNVMeCmd instance
+    Brief:
+        nread(lba, blockcount, outFile=None, inFile=None, offset=0) -
+            Issues a NLBA Read command using Test Command Read.
+
+    Description:
+        Issues a NLBA Read command using Test Command Read.  If inFile is specified,
+        reads from that file.
+
+    Argument(s):
+        lba - (Required) The negative lba you want to issue.
+        blockcount - (Required) The number of blocks (512 bytes each) to read.
+        outFile - (Optional; Defaults to None) Optional filename (string)
+            to save the binary data read.
+        inFile - (Optional; Defaults to None) Optional filename (string) to
+            read in binary data.  If not provided will read from drive.
+        offset - (Optional; Defaults to 0) The number of bytes to offest into the write buffer. 0
+            corresponds to the start.
+
+    Return Value(s):
+        True if command successful, else False
+
+    Example:
+        devObj.nread(-122,1) -> True
+
+    Related:
+        nwrite()
+
+    Author(s):
+        Charles Machalow
+
+twidl>
+
+
+
+
+twidl>help(nwrite)
+Help on method nwrite in module commands.nlba_generic_cmd:
+
+nwrite(self, lba, blockcount, ioFile=None, offset=0) method of commands.nlba_generic_cmd.NLBAGenericNVMeCmd instance
+    Brief:
+        nwrite(lba, blockcount, ioFile=None, offset=0) - Issues a NLBA write command using Test Command Write.
+
+    Description: -
+        Issues a NLBA write command using Test Command Write.
+
+    Argument(s):
+        lba - (Required) The negative lba you want to issue.
+        blockcount - (Required) The number of blocks (512 bytes each) to write.
+        ioFile - (Optional; Defaults to None) Optional filename (string) to write to the given
+            lba.
+        offset - (Optional; Defaults to 0) The number of bytes to offest into the write buffer. 0
+            corresponds to the start.
+
+    Return Value(s):
+        True if command successful, else False
+
+    Example:
+        devObj.nwrite(-122, 1) -> True
+
+    Related:
+        nread()
+
+    Author(s):
+        Charles Machalow
+
+twidl>
+
+
+
+*****************************************************************************************************************************************8
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
