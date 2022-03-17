@@ -102,3 +102,19 @@ Second round:
 19.
 
 
+Micron:
+1.python:program using list values to string
+program for assignment operator(copy)
+program using lambda
+program using method overloading
+program to sort without using inbuilt
+program to print count for different types of alphabtes with same string(Micron,micron,MIcron)
+
+NVMe:
+phasetag
+how u idenitfy whether command is completed
+what is format NVMe
+and how will u format and does it continues after power off
+
+
+
