@@ -118,3 +118,28 @@ and how will u format and does it continues after power off
 
 
 
+Silarra:
+1.What is ur role
+2.What's work u are dooing
+3.What is compare command
+4.what is namespace and parameters
+4.what are admin commands
+5.what are IO commands
+6.how many issues u have raised while doing testing
+7.how nvme drive is initialised
+8.what are registers
+9.how cc register work
+10.different registers
+11.when u are doing format nvme its not formatted whatu are doing
+12.what is status register
+13.how to know the number of queues there
+14.how to know the queue name
+15.why commands are there
+
+python:
+what is slef
+inheritance
+oops
+data type etcc.
+how may scripts you have written u have so far
+
