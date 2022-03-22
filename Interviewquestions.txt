@@ -118,7 +118,7 @@ and how will u format and does it continues after power off
 
 
 
-Silarra:
+Silarra:First round
 1.What is ur role
 2.What's work u are dooing
 3.What is compare command
@@ -143,3 +143,14 @@ oops
 data type etcc.
 how may scripts you have written u have so far
 
+
+Netapp:
+1.How to write test scenario for validating login page
+2.write a program for adding hundred digit number
+3.write a program for palindrome whether it is strnig or number
+4.What is virtualization
+5.What is NFS 
+6.What is Rest APi and how u use and status codes
+7.how can u execute 20 cases in 100 cases
+8.kubernates
+9.
