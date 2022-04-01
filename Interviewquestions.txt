@@ -154,3 +154,19 @@ Netapp:
 7.how can u execute 20 cases in 100 cases
 8.kubernates
 9.
+
+
+DELL:
+1.What is ur role and work
+2.What is Driver and firmware
+3.Command to verify logs in linux and windows
+4.How to see the driver version in linux
+5.how to see the driver version in windows and what script use to see the driver version
+6.where to see the driver in windows
+7.What is NVMe
+8.What is cluster in vmware
+9.what is virtualization
+10.What is RAID 5
+11.What is parity
+12.advnatage of virtualization
+13.
