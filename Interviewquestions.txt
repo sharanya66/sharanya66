@@ -169,4 +169,6 @@ DELL:
 10.What is RAID 5
 11.What is parity
 12.advnatage of virtualization
-13.
+13.what is SAS
+14.What queueing algorithm used in SAS
+15.how many queues in NVMe and SAS
