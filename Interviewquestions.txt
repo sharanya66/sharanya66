@@ -235,4 +235,4 @@ Because computers wont understand the domain names
 s.communicate() used for getiing commands 
 
 
-5
+
