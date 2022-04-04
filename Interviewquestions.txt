@@ -172,3 +172,67 @@ DELL:
 13.what is SAS
 14.What queueing algorithm used in SAS
 15.how many queues in NVMe and SAS
+
+
+
+
+VVDN:
+1.What is U r role and What is Ur working On
+2.Do u know networking(DHCP,DNS,OSI layers,TCP/UDP)
+3.How to take connect SSH from commandline(ssh username@ip-address)
+4.What is DHCP(for connecting ipaddress from server)
+5.What modules you used for automation(sys,os,re,subprocess,selenium,requests)
+6.How to ssh using python program(paramiko module)(ssh=paramiko.sshclient())
+7.python program for modification of a string in file.
+(with open('filename') as fp:
+    data=fp.read()
+data=data.replace(oldfile,newfile)
+with open ('file',w) as fp:
+    fp.write(data))
+
+8.What is lambda
+9.Python program for square rooting the numbers in a list
+#list1 = [2, 5, 7]
+#output = [4, 25, 49]
+l1=[2,5,7]
+l2=list(map(lambda x:x*x,l1))
+print(l2)
+10.Python program for counting how many times the given string is present
+#str1 = ‘abcbcab’
+#str2 = ‘bc’
+str1='abcbcab'
+str2='bc'
+print(str1.count(str2))
+11.how to list files
+12.how to list today date and time files
+13.ls -lrt
+14.how to take particular string in a file(grep)
+15.what is dictionary,where u used in ur project
+16.how to read keys from dictionary(d.keys())
+17.how do we get max number from a list(mmax())
+18.if we have to take case sensitive letter from a file in python(use i ignorecase)
+19.What is re module
+20.What is DHCP Process(DORA)
+DISCOVER OFFER REQUEST ACKNOWLEDGEMENT
+21.What is the difference between linux and windows(Terminal and command prompt)(environment variable,export variables,)
+22.how to pass command line arguments in python
+(import sys
+version = sys.argv[1]
+print(version))
+----------
+input
+python filename.py 5
+output 
+5
+---------
+----------------
+23.How we can know the test case is passed in linux(os.system(cmd)) if it returns '0' success and 1 means failure
+24.What is DNS(Domain name system)
+it will resolve ip adresses from domain names
+like google.com->to Ip adress
+Because computers wont understand the domain names
+25.S=subprocess.popen('ls')
+s.communicate() used for getiing commands 
+
+
+5
