@@ -236,3 +236,43 @@ s.communicate() used for getiing commands
 
 
 
+Brisa Technologies:
+1.What is ur role and work
+2.What is NVMe
+3.how NVMe is different from other ssd's.
+4.What are the features of python
+5.What are the datatypes in python
+6.How we are using slicing
+7.giving list print [2:5] and [2::-1]
+8.#str1 = ["arya", "nitin", "shreyas","priya","Arti","zeeshan"]
+str1 = ["arya", "nitin", "shreyas","priya","Arti","zeeshan"]
+#for word in str1:
+    #if word.startswith('a') or word.startswith('A'):
+        #print(word)
+res=sorted(str1)
+print(res)#program for printing the strings starts with a and print the strings in alphabetical order
+9.#5 5 5 5 5
+#4 4 4 4
+#3 3 3
+#2 2
+#1
+n=5
+for i in range(n,0,-1):
+    for j in range(0,n-1):
+        print(end='')
+    for j in range(0,i):
+        print(n,end='')
+    print()
+10.program for printing the text in reverse order by manually creating data in file
+11.program for printing the text in reverse order by writing data through the code
+with open('ip.txt','w') as fp:
+    #data=fp.write('heloo how are you')
+    fp.write('hi how are you')
+with open('ip.txt') as fp:
+    data = fp.read()
+    data= data.split()
+w=''
+for i in data:
+    w=i+w
+print(w)
+
