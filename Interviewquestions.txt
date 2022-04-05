@@ -276,3 +276,4 @@ for i in data:
     w=i+w
 print(w)
 
+12.Difference between range and Xrange
