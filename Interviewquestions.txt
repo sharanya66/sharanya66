@@ -278,3 +278,42 @@ print(w)
 
 12.Difference between range and Xrange
 13.difference between tuple and dictionary
+
+
+
+Capgemini:
+1.What is your role
+2.what is NVMe
+3.What are the commands u know in NVMe
+4.How much rate yourself in python
+5.Python program for printing three three letters in the given string.
+#AABBCCDDEEFFGGHHIIJJKKLLMMNN
+str1='AABBCCDDEEFFGGHHIIJJKKLLMMNN'
+for i in range(0,len(str1),3):
+    print(str1[i:i+3])
+
+o/p:
+AAB
+BCC
+DDE
+EFF
+GGH
+HII
+JJK
+KLL
+MMN
+N
+
+6.Python program for printing addition,sub,mul in oops.
+class Example:
+    def __init__(self,a,b):
+        self.a=a
+        self.b=b
+    def sum(self):
+        return self.a+self.b
+    def mul(self):
+        return self.a*self.b
+obj=Example(2,3)
+print(obj.sum())
+        
+> 
