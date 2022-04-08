@@ -317,3 +317,94 @@ obj=Example(2,3)
 print(obj.sum())
         
 > 
+
+
+
+
+Mindtree:
+firstround:
+1.What are ur rols and responsibilities
+2.Python how much u rate'
+3.python programs
+4.Write a program for printing the words having length odd and reverse them without using inbuilt.
+lst1=['australia','japan','india','france']
+lst2=[]
+def counter(str1):
+    count=0
+    for i in str1:
+        count +=1
+    return count
+
+for i in lst1:
+    if not counter(i)%2 ==0:
+        lst2.append(i[::-1])
+print(lst2)
+
+
+o/p:['ailartsua', 'napaj', 'aidni']
+
+5.Write a program for the  printing the ocurences of each and every digit in dictionary.
+str1='strength in unity'
+d1={}
+def counter(str1,ch):
+    count=0
+    for i in str1:
+        if i == ch:
+            count +=1
+    return count
+for i in set(list(str1)):
+    d1[i]=counter(str1,i)
+print(d1)
+
+o/p:{'r': 1, ' ': 2, 'n': 3, 'g': 1, 's': 1, 'i': 2, 'u': 1, 'h': 1, 'e': 1, 't': 3, 'y': 1}
+
+6.write a program for printing the odd numbers in a list using lambda
+
+lst=[8,7,3,4,1]
+x1=list(filter(lambda x: not x%2 ==0,lst))
+print(x1)
+
+o/p:[7, 3, 1]
+
+7.write a pgm for validate ip address
+
+import re
+def valid_ip(x):
+    s=re.search('(\d+).(\d+).(\d+).(\d+)',x)
+    print(s)
+    if s:
+        for i in s.groups():
+            print(i)
+            if int(i) <0 or int(i) > 255:
+                return False
+        return True
+print(valid_ip('10.85.96.112'))
+
+
+o/p:
+<re.Match object; span=(0, 12), match='10.85.96.112'>
+10
+85
+96
+112
+True
+
+8.write a pgm for printing the class with divide numbers and raise exception if any exception occurs.
+class Example:
+    def __init__(self,a,b):
+        self.a=a
+        self.b=b
+    def divide(self):
+        try:
+            res = self.a/self.b
+            return res
+        except Exception as e:
+            return False
+obj1=Example(2,2)
+print(obj1.divide())
+
+o/p:1.0
+
+9.What is abstract class
+10.difference between list and tuple
+11.what is multiple and multilevel inheritance
