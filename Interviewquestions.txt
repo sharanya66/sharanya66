@@ -316,8 +316,54 @@ class Example:
 obj=Example(2,3)
 print(obj.sum())
         
-> 
+Second Round(WDC):
+1.What are ur roles and responsibities
+2.Tell me features of NVMe what have u tested
+3.Can u develop any script if please explain(orally)
+4.What is getlogpage
+5.What is smart
+6.write a python script for printing
+s
+sh
+sha
+shar
+shara
+sharan
+sharany
+sharanya
 
+pgm:
+str='sharanya'
+for i in range(len(str)):
+    for j in range(i+1):
+        print(str[j],end='')
+    print()
+7.What is fio
+8.what is iometer,if u have read write why iometer
+9.is controller is hardware or software(software)
+10.If vm is not responding even u power off what it would be
+11.python for printing name without duplicates and replce the vowel with 6.
+str1='sharanya'
+res= list(set(str1))
+print(res)
+str2=''
+vowels=['a','e','i','o','u']
+for i in res:
+    if i not in str2:
+        if i in vowels:
+            str2 = str2 + '6'
+        else:
+            str2 = str2 + i
+print(str2)
+
+12.What is agile methodology
+13.how can we know if the tool there(grep)
+14.do we run fio without tool
+15.we created namespace if deleted it is it invalid or not
+16.what is single and multiple namespace
+17.What is trim command
+18.What is invalid LBA.
+19.How can we write data on invalid LBA.(My answer write zeroes)
 
 
 
