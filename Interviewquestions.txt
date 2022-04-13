@@ -454,3 +454,65 @@ o/p:1.0
 9.What is abstract class
 10.difference between list and tuple
 11.what is multiple and multilevel inheritance
+
+
+Polaris:
+1.What are your roles and responsibities
+2.How can u rate ur self in testing and python
+3.team size
+4.what is list,tuple,dictionary,set
+5.shallow copy and deep copy
+import copy
+#shallow copy
+lst1=[1,2,3,4,[5,6]]
+lst2=copy.copy(lst1)
+print(lst1)
+print(lst2)
+lst1[-1].append(10)
+print(lst1)
+print(lst2)
+#deepcopy
+lst3=[10,20,30,[40,50,60]]
+lst4=copy.deepcopy(lst3)
+print(lst3)
+print(lst4)
+lst3[-1].append(70)
+print(lst3)
+print(lst4)
+6.Zip method
+7.how do u reverse a string(ways and explain)([::-1],reversed)
+8.how to join two lists(lst1=['1','2','3']
+lst2=['4','5','6']
+print(''.join(lst1+lst2))
+lst1.extend(lst2)
+print(lst1)
+
+9.Given bubble sort program and explain and tell me time complexity
+10.What is command line arguments how to read(import sys
+sys.argv[1])
+11.what is subprocess
+12.How to find the path of file by using python program(OS module)
+13.what is logger and different levels of logger module
+(INFO
+DEBUG
+WARNING
+ERROR
+critical)
+14.What is multithreading
+15.What is mutliprocessing
+16.What is the difference between Subprocess and multithreading
+17.What it time complexity
+18.how to convert tuple to a  list
+19.how many ways we can sort a list
+20.raise keyword
+21.how to read key in dictionary in python and what is key is not present(key error)
+22.Framewroks used (pytest)
+23.Magic methods(__main__) and why we used in our program
+24.Different magic methods
+25.Ps command in linux(ps -ef | grep <process>)
+26.TOP Command(for cpus)
+27.Echo command in linux (for writing content to a file)
+28.JSON module
+29.pandas
+30.MYSQL
+31.
