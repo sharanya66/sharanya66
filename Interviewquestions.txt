@@ -516,3 +516,29 @@ critical)
 29.pandas
 30.MYSQL
 31.
+
+HARMAN:
+1.Given a list print the list in reverse order and remove duplicates
+lst1=[1,3,4,5,6,3,4,5]
+lst2=list(set(lst1))
+print(lst2[::-1])
+o/p:[6, 5, 4, 3, 1]
+2.Given two strings print true if found all the characters in one string found in another string
+str1='abca'
+str2='bcaa'
+def find1(str1,str2):
+   #if len(str1) == len(str2):
+     for i in str1:
+        if not str1.count(i) == str2.count(i):
+          return False
+     return True
+print(find1(str1,str2))
+o/p:TRUE
+3.Linux commands
+print the list of process of java
+ps -a | grep 'java'
+pid(java)
+4.TDD(TEST DRIVEN DEVELOPEMENT)
+5.WHAT IS TCP
+6.difference between tcp and udp
+7.OSI LAYERS
