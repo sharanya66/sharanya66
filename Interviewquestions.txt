@@ -542,3 +542,4 @@ pid(java)
 5.WHAT IS TCP
 6.difference between tcp and udp
 7.OSI LAYERS
+8.What is INIT method 
