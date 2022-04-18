@@ -543,3 +543,38 @@ pid(java)
 6.difference between tcp and udp
 7.OSI LAYERS
 8.What is INIT method 
+
+
+
+Western Digital(direct):
+1.Roles and responsibilities
+2.WHY WE are using NVMe and why not SATA
+3.WHAT is SAN NAS DAS
+4.DIfference between SAN AND NAS DAS(Different protocols)
+5.if u have iscsi and fc which protocol u will take
+6.Tell me any 5 admin commands
+7.linux commands
+i have a file having 1000 lines i need to print 500-510 using linux command
+8.print first 4 lines(head command)
+9.last 5 lines(tail command)
+10.which module u used for running linux(subprocess)
+11.python program for printing thirs highest element in a given list of numbers
+12.python program for printing the given string is a possible palindrome or not
+#input string : aadccff 
+str1='aabcee'
+list1=list(str1)
+#print(list1)
+str_list= set(list(str1))
+#print(str_list)
+def validate_palindrome(list1,str_list):
+    count=0
+    for i in str_list:
+        if list1.count(i)%2==0:
+            count+=1
+    print(len(str_list))
+    print(count)
+    if len(str_list) - count ==1 or count%2==0:
+        return True
+    return False
+print(validate_palindrome(list1,str_list))
+
