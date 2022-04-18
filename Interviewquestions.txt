@@ -547,6 +547,7 @@ pid(java)
 
 
 Western Digital(direct):
+First round:
 1.Roles and responsibilities
 2.WHY WE are using NVMe and why not SATA
 3.WHAT is SAN NAS DAS
@@ -581,3 +582,4 @@ print(validate_palindrome(list1,str_list))
 When we are using Aynchronous event command
 how to load a module in linux
 difference between modprobe and insmod
+What is the timeout for asynchronous event request command(1000 ms)
