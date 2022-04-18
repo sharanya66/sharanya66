@@ -578,3 +578,4 @@ def validate_palindrome(list1,str_list):
     return False
 print(validate_palindrome(list1,str_list))
 
+When we are using Aynchronous event command
