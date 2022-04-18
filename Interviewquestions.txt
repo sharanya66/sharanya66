@@ -579,3 +579,5 @@ def validate_palindrome(list1,str_list):
 print(validate_palindrome(list1,str_list))
 
 When we are using Aynchronous event command
+how to load a module in linux
+difference between modprobe and insmod
