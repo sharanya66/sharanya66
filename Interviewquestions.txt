@@ -583,3 +583,44 @@ When we are using Aynchronous event command
 how to load a module in linux
 difference between modprobe and insmod
 What is the timeout for asynchronous event request command(1000 ms)
+
+MICRON(ANOTHER DIRECT)
+FIRST ROUND:
+1.HOW YOU ARE VALIDATing nvme in ur project
+2.tell me how many command sets are there in nvme(2)
+3.What is aynchronous event request command,how many events are there
+4.how u know which error reporting(from get log page)
+5.What is LID in getlogpage and different values for LID's
+6.Tell me script for namespacemanagement
+7.What is format nvm
+tell me steps for formatting nvme with preconditions and expected result
+8.tell me some basic sanity tests for format nvm
+9.if u r formatting from one lba to another if i have data what it would be(erased).
+10.Tell me  mechanism for submission and completions
+11.how mny register for IO queues(4)
+when submitting stail increments
+when fetches sqheader
+when processing cqtail
+when completes cq head pointer
+12.difference between list tuple
+13.difference between class object
+14.to know object method(dir(object))
+15.program i have a file containing
+a:name
+b : age
+write a program if i give key it should print value
+16.program for printing this is a small stmt with t capital
+a= [["this","is"],["a"],["small","stmt"]]
+b=[]
+for i in a:
+    if type(i) is list:
+        for j in i:
+            b.append(j)
+    else:
+        b.append(i)
+print(b)
+
+c = ' '.join(b)
+print(c.title())
+17.
+
