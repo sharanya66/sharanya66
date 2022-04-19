@@ -546,8 +546,7 @@ pid(java)
 
 
 
-Western Digital(direct):
-First round:
+Western Digital(direct):first round
 1.Roles and responsibilities
 2.WHY WE are using NVMe and why not SATA
 3.WHAT is SAN NAS DAS
@@ -583,6 +582,30 @@ When we are using Aynchronous event command
 how to load a module in linux
 difference between modprobe and insmod
 What is the timeout for asynchronous event request command(1000 ms)
+
+Western digital(direct):second round
+1.Roles and responsibities
+2.Python program given a list print if 4 in the list and index
+3.Python program for printing dictionary with  name as key and list of values as a list
+4.Python program remove duplictes in a list
+5.python program for sorting the lists which are vlues of dictionary keys
+d1={'list1':[1,2,3,4,3],'list2':[2,3,3],'list3':[1,2,3,3]}
+#longest =0
+s={}
+for i in d1:
+    p=[]
+    for j in d1[i]:
+        if j not in p:
+            p.append(j)
+    s[i]=p 
+print(s)   
+6.What is namespace
+7.size of namespace
+8.what is root complex
+9.how you can see drive physically attached through nvme
+10.Submission queue and completion queue
+11.
+
 
 MICRON(ANOTHER DIRECT)
 FIRST ROUND:
