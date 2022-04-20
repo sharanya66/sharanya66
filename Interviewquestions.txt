@@ -365,6 +365,27 @@ print(str2)
 18.What is invalid LBA.
 19.How can we write data on invalid LBA.(My answer write zeroes)
 
+Third round(WDC):
+Roles and responsibities
+how much u rate for nvme ur self
+what is namespace
+what is the difference between format nvme and santize
+i have integer with 64 bits i need to extract with 5 th byte write a program
+remove last element in a list 
+get a string with reverse and print form index 7 to 3
+swap two values without using third variable
+steps for firmware upgrade
+commit actions
+trim process how u iinitaiate trim
+smart and critical values for smart
+pci signalling(inband and outband)
+other modules u know apart from nvme
+nvmemi
+what is pcie
+i want to build PC which u parts u will take and explain why
+what is secure erase with 0 and 1
+what is encryption
+
 
 
 Mindtree:
@@ -663,3 +684,7 @@ what is vmware workstation
 Different extension files in vmware
 what is vcenter
 what is VSS AND VDS
+
+
+
+
