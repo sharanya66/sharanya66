@@ -647,3 +647,19 @@ c = ' '.join(b)
 print(c.title())
 17.
 
+
+TCS(FIRST ROUND):
+ROLES AND responsibities
+What is ur work under vmware
+what is clone
+what is template
+shall we clone while power on machine(yes)
+shall we take template while power on machine(no)
+what is HA AND DRS
+what is root port
+what is vmkernel
+what are files are there in vmfs
+what is vmware workstation
+Different extension files in vmware
+what is vcenter
+what is VSS AND VDS
