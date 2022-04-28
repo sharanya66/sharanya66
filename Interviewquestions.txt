@@ -688,3 +688,12 @@ what is VSS AND VDS
 
 
 
+Capgemini(direct):
+1.STLC
+2.python questions
+3.Proram to reverse string
+4.program on multiple in heritance
+5.program for printing s1h2a3r4a5
+letters in one list
+digits in one list
+6.program print rrrppqq to 3r2p2q
