@@ -688,7 +688,7 @@ what is VSS AND VDS
 
 
 
-Capgemini(direct):
+Capgemini(direct):SECOND ROUND
 1.STLC
 2.python questions
 3.Proram to reverse string
@@ -697,3 +697,40 @@ Capgemini(direct):
 letters in one list
 digits in one list
 6.program print rrrppqq to 3r2p2q
+
+
+
+MIRAFRA:
+first round :python and testing
+second round:subprocess,and static and class methods,
+programs
+x = [1,2,3,4]
+y = ['a','b','c']
+print(x.append(y))
+print(x.extend(y))
+
+[1,2,3,4,[a,b,c]]
+[1,2,3,4,a,b,c]
+
+c= ['Red', 'Green', 'Blue', 'White', 'Black'] reverse each string by using lambda
+list(map(lambda x:x[::-1],c)
+
+py_list = ['P', 'y', 't', 'h', 'o', 'n']
+print(py_list[-1:-4:1]) o/p:?
+[^arn]
+
+execute "ipconfig" command using subprocess
+execute "ipconfig" command using subprocess
+
+list1 = [1,2,3,4]
+def change(a):
+a[2] = 5
+print(list1)
+change(list1)
+print(list1)
+
+[1,2,3,4]
+[1,2,5,3,4]
+
+
+
