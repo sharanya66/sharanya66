@@ -760,3 +760,6 @@ print(sum1)
 15.virtualization
 16.SAN and DAS
 17.difference san and das
+18.What is regression testing and diff b/w regression and retestung
+19.what is functional testing
+20.Different testing types
