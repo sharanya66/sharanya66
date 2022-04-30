@@ -734,3 +734,29 @@ print(list1)
 
 
 
+MSYS:
+1.What is SATA
+2.What is iscsi
+3.What is difference between SATA AND ISCSI
+4.what is raid
+5.raid01 and raid10
+6.and list tuple dictionary
+7.root cause analysis
+8.agile methodologiy
+9.hot spare
+10.bug related
+11.python program for removing duplicates without using builtin
+12.program for reverse the words in string
+13.program for adding the string value
+str1='12' o/p:4
+str1='13'
+sum1=0
+for i in str1:
+    sum1+=int(i)
+print(sum1)
+    
+
+14.inheritance
+15.virtualization
+16.SAN and DAS
+17.difference san and das
