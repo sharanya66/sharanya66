@@ -732,6 +732,8 @@ print(list1)
 [1,2,3,4]
 [1,2,5,3,4]
 
+Can we use python2 and python 3 in same time :YES
+
 
 
 MSYS:
@@ -763,3 +765,35 @@ print(sum1)
 18.What is regression testing and diff b/w regression and retestung
 19.what is functional testing
 20.Different testing types
+
+
+
+SPANIDEA:
+1.Program for converting date month year to month date year
+#to convvert year month date format to date month year format
+import datetime
+date='2022-2-5'
+dt=datetime.datetime.strptime('2022-2-5','%Y-%m-%d').strftime('%m/%d/%y')
+print(dt)
+
+
+2.Program for finding whether sequence of elements are unique or not
+3.what is python namespace(global,local)
+pgm:
+a = 10 #global
+def fun1():
+    b=5 #local
+    global a
+    print(a)
+    print(b)
+fun1()
+
+4.What is automation and manual testing
+4.admin commands
+4.sata nd nvme diff
+5.sanity smoke and acceptance
+6.white box and blackbox testing
+7.SSD overprovisioning
+8.Wht is SSD
+9.What is module
+10.
