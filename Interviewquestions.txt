@@ -766,6 +766,18 @@ print(sum1)
 19.what is functional testing
 20.Different testing types
 
+Second round:
+roles and responsibilities
+what is nvme
+what is snapshot
+what is different versions of linux and what is the difference
+what are different versions of esxi and what is the difference
+what is multipathing
+python:program on generatoors
+program for printing sum of 2+22+2222 by taking input integer
+program for printing the list of indicesof numbers with sum of numbers is 0
+
+
 
 
 SPANIDEA:
@@ -848,3 +860,6 @@ c= Car('Blue',101,008,50)
 print(c.display())
         
 
+TCS(Managerial round):
+1.What is regression testing and functional testing
+2.Sorting and find 2 3 larger numbers
